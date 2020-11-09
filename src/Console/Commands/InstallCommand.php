@@ -9,6 +9,9 @@ namespace Szkj\Install\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
+use Szkj\Install\Seeder\ItemSeeder;
+use Szkj\Install\Seeder\UserSeeder;
+use Szkj\Install\Seeder\WechatSeeder;
 
 class InstallCommand extends Command
 {
@@ -80,7 +83,7 @@ ETO;
             ["--provider" => "Dingo\Api\Provider\LaravelServiceProvider"]
         );
         $this->call('vendor:publish',
-            ["--provider" => "Szkj\Install\Provider\SzkjServiceProvider"]
+            ["--provider" => "Szkj\Install\Providers\SzkjServiceProvider"]
         );
     }
 
@@ -89,13 +92,13 @@ ETO;
      */
     protected function seeder($platforms)
     {
-        $this->call('db:seed', ["--class" => "UserSeeder"]);
+        $this->call('db:seed', ["--class" => UserSeeder::class]);
         foreach ($platforms as $k => $v) {
             if (hash_equals($v, '电商平台')) {
-                $this->call('db:seed', ['--class' => 'ItemSeeder']);
+                $this->call('db:seed', ['--class' => ItemSeeder::class]);
             }
             if (hash_equals($v, '微信公众号')) {
-                $this->call('db:seed', ['--class' => 'WechatSeeder']);
+                $this->call('db:seed', ['--class' => WechatSeeder::class]);
             }
             if (hash_equals($v, '服务平台')) {
 
