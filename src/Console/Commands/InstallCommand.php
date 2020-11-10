@@ -72,6 +72,8 @@ ETO;
             null,
             true);
         $this->seeder($platforms);
+
+        $this->createBaseController();
     }
 
     /**
