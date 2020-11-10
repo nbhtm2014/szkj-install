@@ -73,6 +73,9 @@ ETO;
             true);
         $this->seeder($platforms);
 
+        /**
+         * create baseController
+         */
         $this->createBaseController();
     }
 
@@ -116,8 +119,8 @@ ETO;
      */
     public function createBaseController()
     {
-        $baseController = app_path() . '/Controllers/BaseController.php';
-        $contents = $this->getStub('/Controllers/BaseController');
+        $baseController = app_path('Http') . '/Controllers/BaseController.php';
+        $contents = $this->getStub('Controllers/BaseController');
 
         $this->laravel['files']->put(
             $baseController,
@@ -137,7 +140,7 @@ ETO;
      */
     protected function namespace($name = null)
     {
-        $base = str_replace('\\Controllers', '\\', config('szkj.route.namespace'));
+        $base = str_replace('\\Controllers', '\\', config('szkj.controller.namespace'));
 
         return trim($base, '\\') . ($name ? "\\{$name}" : '');
     }
@@ -152,6 +155,6 @@ ETO;
      */
     protected function getStub($name)
     {
-        return $this->laravel['files']->get(__DIR__ . "../../stubs/$name.stub");
+        return $this->laravel['files']->get(__DIR__ . "/../../stubs/$name.stub");
     }
 }

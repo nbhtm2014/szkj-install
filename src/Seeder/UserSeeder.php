@@ -15,14 +15,16 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        DB::connection($this->getConnection())->table('users')->insert([
-            'name'       => 'superadmin',
-            'email'      => 'szkj@szkj.com',
-            'password'   => Hash::make('password'),
-            'superadmin' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        if (!DB::connection($this->getConnection())->table('users')->where('superadmin', 1)->count()) {
+            DB::connection($this->getConnection())->table('users')->insert([
+                'name'       => 'superadmin',
+                'email'      => 'szkj@szkj.com',
+                'password'   => Hash::make('password'),
+                'superadmin' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**
