@@ -105,4 +105,51 @@ ETO;
             }
         }
     }
+
+
+    /**
+     * Create HomeController.
+     *
+     * @return void
+     */
+    public function createBaseController()
+    {
+        $baseController = app_path() . '/Controllers/BaseController.php';
+        $contents = $this->getStub('/Controllers/BaseController');
+
+        $this->laravel['files']->put(
+            $baseController,
+            str_replace(
+                'DummyNamespace',
+                $this->namespace('Controllers'),
+                $contents
+            )
+        );
+        $this->line('<info>BaseController file was created:</info> ' . str_replace(base_path(), '', $baseController));
+    }
+
+
+    /**
+     * @param null $name
+     * @return string
+     */
+    protected function namespace($name = null)
+    {
+        $base = str_replace('\\Controllers', '\\', config('szkj.route.namespace'));
+
+        return trim($base, '\\') . ($name ? "\\{$name}" : '');
+    }
+
+
+    /**
+     * Get stub contents.
+     *
+     * @param $name
+     *
+     * @return string
+     */
+    protected function getStub($name)
+    {
+        return $this->laravel['files']->get(__DIR__ . "../../stubs/$name.stub");
+    }
 }
