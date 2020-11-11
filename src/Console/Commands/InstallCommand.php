@@ -77,6 +77,11 @@ ETO;
          * create baseController
          */
         $this->createBaseController();
+
+        /**
+         * create baseRequest
+         */
+        $this->createBaseRequest();
     }
 
     /**
@@ -140,6 +145,9 @@ ETO;
      */
     public function createBaseRequest()
     {
+        if (!is_dir(app_path().'/Http/Requests')) {
+            $this->makeDir('Http/Requests');
+        }
         $baseRequest = app_path('Http') . '/Requests/BaseRequest.php';
 
         $contents = $this->getStub('Requests/BaseRequest');
@@ -178,5 +186,15 @@ ETO;
     protected function getStub($name)
     {
         return $this->laravel['files']->get(__DIR__ . "/../../stubs/$name.stub");
+    }
+
+    /**
+     * Make new directory.
+     *
+     * @param string $path
+     */
+    protected function makeDir($path = '')
+    {
+        $this->laravel['files']->makeDirectory(app_path().'/'.$path, 0755, true, true);
     }
 }
