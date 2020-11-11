@@ -64,20 +64,18 @@ ETO;
         if (!Schema::hasTable('platforms')) {
             $this->call('migrate');
         }
+        /**
+         * publish config file
+         */
         $this->publishConfig();
-
-        $platforms = $this->choice('请选择采集平台（多选请用逗号隔开,比如0,1,2）',
-            ['电商平台', '微信公众号', '服务平台'],
-            0,
-            null,
-            true);
-        $this->seeder($platforms);
-
+        /**
+         * seed database
+         */
+        $this->seeder();
         /**
          * create baseController
          */
         $this->createBaseController();
-
         /**
          * create baseRequest
          */
@@ -97,23 +95,12 @@ ETO;
         );
     }
 
-    /**
-     * @param $platforms
-     */
-    protected function seeder($platforms)
+
+    protected function seeder()
     {
         $this->call('db:seed', ["--class" => UserSeeder::class]);
-        foreach ($platforms as $k => $v) {
-            if (hash_equals($v, '电商平台')) {
-                $this->call('db:seed', ['--class' => ItemSeeder::class]);
-            }
-            if (hash_equals($v, '微信公众号')) {
-                $this->call('db:seed', ['--class' => WechatSeeder::class]);
-            }
-            if (hash_equals($v, '服务平台')) {
-
-            }
-        }
+        $this->call('db:seed', ['--class' => ItemSeeder::class]);
+        $this->call('db:seed', ['--class' => WechatSeeder::class]);
     }
 
 
