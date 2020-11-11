@@ -131,7 +131,7 @@ ETO;
             $baseController,
             str_replace(
                 'DummyNamespace',
-                $this->namespace('Controllers'),
+                'App\\Http\\Controllers',
                 $contents
             )
         );
@@ -156,25 +156,12 @@ ETO;
             $baseRequest,
             str_replace(
                 'DummyNamespace',
-                config('szkj.request.namespace'),
+                'App\\Http\\Requests',
                 $contents
             )
         );
         $this->line('<info>BaseRequest file was created:</info> ' . str_replace(base_path(), '', $baseRequest));
     }
-
-
-    /**
-     * @param null $name
-     * @return string
-     */
-    protected function namespace($name = null)
-    {
-        $base = str_replace('\\Controllers', '\\', config('szkj.controller.namespace'));
-
-        return trim($base, '\\') . ($name ? "\\{$name}" : '');
-    }
-
 
     /**
      * Get stub contents.
