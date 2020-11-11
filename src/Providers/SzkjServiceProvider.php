@@ -39,7 +39,7 @@ class SzkjServiceProvider extends ServiceProvider
      */
     protected function registerPublishing()
     {
-        $this->publishes([__DIR__ . '/../../config' => config_path()], 'szkj-config');
+        $this->publishes([realpath(__DIR__.'/../../config/szkj.php') => config_path('szkj.php')]);
     }
 
     /**
