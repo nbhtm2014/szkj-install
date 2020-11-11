@@ -133,6 +133,28 @@ ETO;
         $this->line('<info>BaseController file was created:</info> ' . str_replace(base_path(), '', $baseController));
     }
 
+    /**
+     * Create BaseRequest.
+     *
+     * @return void
+     */
+    public function createBaseRequest()
+    {
+        $baseRequest = app_path('Http') . '/Requests/BaseRequest.php';
+
+        $contents = $this->getStub('Requests/BaseRequest');
+
+        $this->laravel['files']->put(
+            $baseRequest,
+            str_replace(
+                'DummyNamespace',
+                config('szkj.request.namespace'),
+                $contents
+            )
+        );
+        $this->line('<info>BaseRequest file was created:</info> ' . str_replace(base_path(), '', $baseRequest));
+    }
+
 
     /**
      * @param null $name
