@@ -80,6 +80,10 @@ ETO;
          * create baseRequest
          */
         $this->createBaseRequest();
+
+        if ($this->confirm('Do you need to release the RBAC file?')) {
+            $this->call('szkj:rbac-install');
+        }
     }
 
     /**
