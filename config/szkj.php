@@ -73,7 +73,7 @@ return [
 
         'middleware' => ['auth:api', 'szkj.rbac'],
 
-        'route_level' => 2
+        'route_level' => 2,
     ],
 
 ];
