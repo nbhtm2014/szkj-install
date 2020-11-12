@@ -72,6 +72,8 @@ return [
         'namespace' => 'Szkj\\Rbac\\Controllers',
 
         'middleware' => ['auth:api', 'szkj.rbac'],
+
+        'route_level' => 2
     ],
 
 ];
