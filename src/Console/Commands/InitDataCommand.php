@@ -75,7 +75,8 @@ class InitDataCommand extends Command
 
     }
 
-    protected function initData(array $rep){
+    protected function initData(array $rep)
+    {
         $this->scroll_id = $rep['_scroll_id'];
         try {
             if (count($rep['hits']['hits']) > 0) {
@@ -93,13 +94,14 @@ class InitDataCommand extends Command
                 }
             }
             $this->clear();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->error($exception->getMessage());
             $this->clear();
         }
     }
 
-    protected function createData(array $data){
+    protected function createData(array $data)
+    {
         foreach ($data as $k => $v) {
             $this->createItem($v['_source']);
             $this->createShop($v['_source']);
@@ -108,14 +110,15 @@ class InitDataCommand extends Command
     }
 
 
-    protected function createItem(array $array){
-        $table_name = 'items_'.$this->task_id;
+    protected function createItem(array $array)
+    {
+        $table_name = 'items_' . $this->task_id;
         $this->createItemsTable($table_name);
         if (!DB::connection($this->getConnection())
             ->table($table_name)
             ->where('item_platform', $array['platform'])
             ->where('nid', $array['commodityId'])
-            ->count()){
+            ->count()) {
             $data['task_id'] = $this->task_id;
             if (isset($array['keyword']) && !empty($array['keyword'])) {
                 $data['keyword'] = $array['keyword'];
@@ -146,25 +149,30 @@ class InitDataCommand extends Command
                 }
             }
             $data['item_url'] = $array['url'];
-            $data['comment_count'] = $array['commentCount'];
+            $data['comment_count'] = $array['commentCountF'];
             $data['view_price'] = $array['viewPrice'];
-            $data['view_sales'] = $array['viewSalesVolume'];
-            $data['view_amount'] =  round($data['view_price'] * $data['view_sales']);
+            $data['view_sales'] = $array['viewSalesVolumeF'];
+            $data['view_amount'] = round($data['view_price'] * $data['view_sales']);
             $data['created_at'] = now();
             $data['updated_at'] = now();
             DB::connection($this->getConnection())->table($table_name)->insert($data);
         }
     }
-    protected function createShop(array $array){
+
+    protected function createShop(array $array)
+    {
 
     }
-    protected function createEntity(array $array){
+
+    protected function createEntity(array $array)
+    {
 
     }
 
 
-    protected function createItemsTable($table_name){
-        if(!Schema::hasTable($table_name)) {
+    protected function createItemsTable($table_name)
+    {
+        if (!Schema::hasTable($table_name)) {
             Schema::create($table_name, function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('task_id')->default(0)->comment('任务id');
@@ -199,7 +207,7 @@ class InitDataCommand extends Command
             'body'   => [
                 "query" => [
                     "bool" => [
-                        "must" => $terms
+                        "must" => $terms,
                     ],
                 ],
             ],
@@ -214,9 +222,9 @@ class InitDataCommand extends Command
                 $array[] = [
                     'term' => [
                         "firmInfo.registrationAuthority.{$k}.keyword" => [
-                            'value'=>$v
-                        ]
-                    ]
+                            'value' => $v,
+                        ],
+                    ],
                 ];
             }
         }
