@@ -180,7 +180,7 @@ ETO;
                 $contents
             )
         );
-        $this->line('<info>BaseRequest file was created:</info> ' . str_replace(base_path(), '', $baseRequest));
+        $this->line('<info>BaseTransformer file was created:</info> ' . str_replace(base_path(), '', $baseRequest));
     }
 
     /**
