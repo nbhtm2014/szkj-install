@@ -81,6 +81,11 @@ ETO;
          */
         $this->createBaseRequest();
 
+        /**
+         * create baseTransformer
+         */
+        $this->createBaseTransformers();
+
         if ($this->confirm('Do you need to release the RBAC file?')) {
             $this->call('szkj:rbac-install');
         }
@@ -148,6 +153,30 @@ ETO;
             str_replace(
                 'DummyNamespace',
                 'App\\Http\\Requests',
+                $contents
+            )
+        );
+        $this->line('<info>BaseRequest file was created:</info> ' . str_replace(base_path(), '', $baseRequest));
+    }
+
+    /**
+     * Create BaseTransformers
+     *
+     * @return  void
+     */
+    public function createBaseTransformers(){
+        if (!is_dir(app_path().'/Http/Transformers')) {
+            $this->makeDir('Http/Transformers');
+        }
+        $baseRequest = app_path('Http') . '/Transformers/BaseTransformer.php';
+
+        $contents = $this->getStub('Transformers/BaseTransformer');
+
+        $this->laravel['files']->put(
+            $baseRequest,
+            str_replace(
+                'DummyNamespace',
+                'App\\Http\\Transformers',
                 $contents
             )
         );
