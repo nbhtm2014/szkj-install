@@ -89,6 +89,10 @@ ETO;
         if ($this->confirm('Do you need to release the RBAC file?')) {
             $this->call('szkj:rbac-install');
         }
+
+        if ($this->confirm('Do you need to release the Collection file?')) {
+            $this->call('szkj:collection-install');
+        }
     }
 
     /**
