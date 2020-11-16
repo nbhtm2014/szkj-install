@@ -8,6 +8,7 @@ namespace Szkj\Install\Providers;
 
 
 use Illuminate\Support\ServiceProvider;
+use Szkj\Install\Console\Commands\InitDataCommand;
 use Szkj\Install\Console\Commands\InstallCommand;
 
 class SzkjServiceProvider extends ServiceProvider
@@ -18,6 +19,7 @@ class SzkjServiceProvider extends ServiceProvider
      */
     protected $commands = [
         InstallCommand::class,
+        InitDataCommand::class
     ];
     /**
      * @return void

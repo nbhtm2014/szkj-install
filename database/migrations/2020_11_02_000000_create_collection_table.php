@@ -112,8 +112,7 @@ class CreateCollectionTable extends Migration
             $table->string('nid', 50)->comment('商品id');
             $table->string('category_id', 200)->nullable()->comment('原始分类id');
             $table->string('title', 500)->comment('标题');
-            $table->string('item_loc_prov', 50)->nullable()->comment('发货地(省)');
-            $table->string('item_loc_city', 50)->nullable()->comment('发货地(市)');
+            $table->string('location', 50)->nullable()->comment('发货地');
             $table->string('shop_id', 50)->comment('店铺id');
             $table->double('view_price')->nullable()->comment('列表价格');
             $table->integer('view_sales')->nullable()->comment('显示销量');
