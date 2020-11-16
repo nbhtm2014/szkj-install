@@ -84,7 +84,6 @@ class CreateCollectionTable extends Migration
             $table->string('address',255)->nullable()->comment('公司地址');
             $table->string('frdb',200)->nullable()->comment('法人代表');
             $table->string('djjg',200)->comment('登记机关');
-            $table->point('geo')->comment('GEO信息');
             $table->string('province',20)->nullable()->comment('省');
             $table->string('city',20)->nullable()->comment('市');
             $table->string('district',20)->nullable()->comment('区');

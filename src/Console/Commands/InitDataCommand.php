@@ -216,7 +216,6 @@ class InitDataCommand extends Command
         if (isset($array['firmInfo']['name']) && !empty($array['firmInfo'])) {
             if (!DB::connection()->table('entities')
                 ->where('name', $array['firmInfo']['name'])
-                ->orWhere('credit_no', $array['firmInfo']['unifiedSocialCreditCode'])
                 ->first()
             ) {
                 $create['name'] = $array['firmInfo']['name'];
@@ -235,6 +234,8 @@ class InitDataCommand extends Command
                 $create['lx'] = isset($array['firmInfo']['enterpriseType']) ? $array['firmInfo']['enterpriseType'] : null;
                 $create['hangye'] = isset($array['firmInfo']['industry']) ? $array['firmInfo']['industry'] : null;
                 $create['state'] = isset($array['firmInfo']['manageStatus']) ? $array['firmInfo']['manageStatus'] : null;
+                $create['created_at'] = now();
+                $create['updated_at'] = now();
                 DB::connection()->table('entities')->insert($create);
                 $this->info('entities insert is success name is '.$create['name']);
             }
