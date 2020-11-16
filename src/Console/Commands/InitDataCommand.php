@@ -92,8 +92,8 @@ class InitDataCommand extends Command
                     }
                     $this->scroll_id = $data['_scroll_id'];
                 }
+                $this->clear();
             }
-            $this->clear();
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
             $this->clear();
@@ -116,7 +116,7 @@ class InitDataCommand extends Command
         $this->createItemsTable($table_name);
         if (!DB::connection($this->getConnection())
             ->table($table_name)
-            ->where('item_platform', $array['platform'])
+            ->where('platform_id', $array['platform'])
             ->where('nid', $array['commodityId'])
             ->count()) {
             $data['task_id'] = $this->task_id;
@@ -156,17 +156,89 @@ class InitDataCommand extends Command
             $data['created_at'] = now();
             $data['updated_at'] = now();
             DB::connection($this->getConnection())->table($table_name)->insert($data);
+            $this->info('insert items success nid is '.$data['nid']);
         }
     }
 
     protected function createShop(array $array)
     {
-
+        if (!DB::connection($this->getConnection())->table('shops')
+            ->where('platform_id', $array['platform'])
+            ->where('shop_id', $array['shopId'])
+            ->first()) {
+            $data['platform_id'] = $array['platform'];
+            $data['shop_id'] = $array['shopId'];
+            $data['name'] = $array['shopName'];
+            if (isset($array['shopInfo']['nickname']) && !empty($array['shopInfo']['nickname'])) {
+                $data['nick'] = $array['shopInfo']['nickname'];
+            }
+            if (isset($array['shopNickname']) && !empty($array['shopNickname'])) {
+                $data['nick'] = $array['shopNickname'];
+            }
+            $data['shop_url'] = $array['shopUrl'];
+            if (isset($array['shopInfo']['licenseUrl']) && !empty($array['shopInfo']['licenseUrl'])) {
+                $data['licence_url'] = $array['shopInfo']['licenseUrl'];
+            }
+            //permit_url
+            if (isset($array['shopInfo']['permitUrl']) && !empty($array['shopInfo']['permitUrl'])) {
+                $data['permit_url'] = $array['shopInfo']['permitUrl'];
+            }
+            if (isset($array['firmInfo']['unifiedSocialCreditCode']) && !empty($array['firmInfo']['unifiedSocialCreditCode'])) {
+                $data['credit_code'] = $array['firmInfo']['unifiedSocialCreditCode'];
+            }
+            if (isset($array['shopSellerId']) && !empty($array['shopSellerId'])) {
+                $data['seller_id'] = $array['shopSellerId'];
+            }
+            if (isset($array['shopInfo']['sellerId']) && !empty($array['shopInfo']['sellerId'])) {
+                $data['seller_id'] = $array['shopInfo']['sellerId'];
+            }
+            if (isset($array['firmInfo']['name']) && !empty($array['firmInfo']['name'])) {
+                $data['company'] = $array['firmInfo']['name'];
+            }
+            if (isset($array['shopInfo']['memberId']) && !empty($array['shopInfo']['memberId'])) {
+                $data['member_id'] = $array['shopInfo']['memberId'];
+            }
+            if (isset($array['shopInfo']['userId']) && !empty($array['shopInfo']['userId'])) {
+                $data['item_user_id'] = $array['shopInfo']['userId'];
+            }
+            if (isset($array['shopInfo']['shopName']) && !empty($array['shopInfo']['shopName'])) {
+                $data['name'] = $array['shopInfo']['shopName'];
+            }
+            $data['created_at'] = now();
+            $data['updated_at'] = now();
+            DB::connection($this->getConnection())->table('shops')->insert($data);
+            $this->info('shop insert success shop_id is '.$data['shop_id']);
+        }
     }
 
     protected function createEntity(array $array)
     {
-
+        if (isset($array['firmInfo']['name']) && !empty($array['firmInfo'])) {
+            if (!DB::connection()->table('entities')
+                ->where('name', $array['firmInfo']['name'])
+                ->orWhere('credit_no', $array['firmInfo']['unifiedSocialCreditCode'])
+                ->first()
+            ) {
+                $create['name'] = $array['firmInfo']['name'];
+                $create['credit_no'] = isset($array['firmInfo']['unifiedSocialCreditCode']) ? $array['firmInfo']['unifiedSocialCreditCode'] : null;
+                $create['regist_no'] = isset($array['firmInfo']['registrationNo']) ? $array['firmInfo']['registrationNo'] : null;
+                $create['address'] = isset($array['firmInfo']['businessAddress']) ? $array['firmInfo']['businessAddress'] : null;
+                $create['frdb'] = isset($array['firmInfo']['legalLeader']) ? $array['firmInfo']['legalLeader'] : null;
+                $create['djjg'] = isset($array['firmInfo']['registrationAuthority']['address']) ? $array['firmInfo']['registrationAuthority']['address'] : null;
+                $create['province'] = isset($array['firmInfo']['registrationAuthority']['province']) ? $array['firmInfo']['registrationAuthority']['province'] : null;
+                $create['city'] = isset($array['firmInfo']['registrationAuthority']['city']) ? $array['firmInfo']['registrationAuthority']['city'] : null;
+                $create['district'] = isset($array['firmInfo']['registrationAuthority']['district']) ? $array['firmInfo']['registrationAuthority']['district'] : null;
+                $create['town'] = isset($array['firmInfo']['registrationAuthority']['town']) ? $array['firmInfo']['registrationAuthority']['town'] : null;
+                $create['street'] = isset($array['firmInfo']['registrationAuthority']['street']) ? $array['firmInfo']['registrationAuthority']['street'] : null;
+                $create['lat'] = isset($array['firmInfo']['registrationAuthority']['lat']) ? $array['firmInfo']['registrationAuthority']['lat'] : null;
+                $create['lng'] = isset($array['firmInfo']['registrationAuthority']['lng']) ? $array['firmInfo']['registrationAuthority']['lng'] : null;
+                $create['lx'] = isset($array['firmInfo']['enterpriseType']) ? $array['firmInfo']['enterpriseType'] : null;
+                $create['hangye'] = isset($array['firmInfo']['industry']) ? $array['firmInfo']['industry'] : null;
+                $create['state'] = isset($array['firmInfo']['manageStatus']) ? $array['firmInfo']['manageStatus'] : null;
+                DB::connection()->table('entities')->insert($create);
+                $this->info('entities insert is success name is '.$create['name']);
+            }
+        }
     }
 
 
@@ -216,6 +288,16 @@ class InitDataCommand extends Command
 
     protected function getPCD(array $array = []): array
     {
+        $array[] = [
+            'exists' => [
+                'field' => 'viewSalesVolumeF',
+            ],
+        ];
+        $array[] = [
+            'exists' => [
+                'field' => 'commentCountF',
+            ],
+        ];
         $pcd = config('szkj.pcd');
         foreach ($pcd as $k => $v) {
             if (!empty($v)) {
