@@ -7,6 +7,7 @@
 namespace Szkj\Install\Console\Commands;
 
 
+use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -31,7 +32,7 @@ class InitDataCommand extends Command
 
 
     /**
-     * @var \Elasticsearch\Client
+     * @var Client
      */
     protected $client;
 
@@ -77,9 +78,13 @@ class InitDataCommand extends Command
 
     protected function initData(array $rep)
     {
+        //写入初始任务
+        $this->insertTask();
         $this->scroll_id = $rep['_scroll_id'];
         try {
             if (count($rep['hits']['hits']) > 0) {
+                //更新任务状态
+                $this->updateTask('status',2);
                 while (true) {
                     $data = $this->client->scroll([
                         'scroll_id' => $this->scroll_id,
@@ -92,6 +97,8 @@ class InitDataCommand extends Command
                     }
                     $this->scroll_id = $data['_scroll_id'];
                 }
+                //更新任务状态
+                $this->updateTask('status',4);
                 $this->clear();
             }
         } catch (\Exception $exception) {
@@ -100,6 +107,40 @@ class InitDataCommand extends Command
         }
     }
 
+    protected function insertTask()
+    {
+        if (!DB::connection($this->getConnection())->table('task')->where('id',$this->task_id)->count()) {
+            $platforms = DB::connection($this->getConnection())->table('platforms')->pluck('id')->toArray();
+            DB::connection($this->getConnection())->table('task')->insert([
+                'id'          => $this->task_id,
+                'title'       => '全网检测任务首次排查',
+                'platform_id' => implode(',', $platforms),
+                'status'      => 1,
+                'user_id'     => DB::connection($this->getConnection())->table('user')->where('superadmin', 1)->first()->id,
+                'pcd'         => trim(config('pcd.province') . ',' . config('pcd.city') . ',' . config('pcd.district'), ','),
+                'type'        => 1,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
+        }
+    }
+
+    /**
+     * @param string $key
+     * @param $value
+     */
+    protected function updateTask(string $key,$value){
+        DB::connection($this->getConnection())
+            ->table('task')
+            ->where('id',$this->task_id)
+            ->update(
+            [$key=>$value]
+        );
+    }
+
+    /**
+     * @param array $data
+     */
     protected function createData(array $data)
     {
         foreach ($data as $k => $v) {
@@ -110,6 +151,9 @@ class InitDataCommand extends Command
     }
 
 
+    /**
+     * @param array $array
+     */
     protected function createItem(array $array)
     {
         $table_name = 'items_' . $this->task_id;
@@ -156,10 +200,13 @@ class InitDataCommand extends Command
             $data['created_at'] = now();
             $data['updated_at'] = now();
             DB::connection($this->getConnection())->table($table_name)->insert($data);
-            $this->info('insert items success nid is '.$data['nid']);
+            $this->info('insert items success nid is ' . $data['nid']);
         }
     }
 
+    /**
+     * @param array $array
+     */
     protected function createShop(array $array)
     {
         if (!DB::connection($this->getConnection())->table('shops')
@@ -207,10 +254,13 @@ class InitDataCommand extends Command
             $data['created_at'] = now();
             $data['updated_at'] = now();
             DB::connection($this->getConnection())->table('shops')->insert($data);
-            $this->info('shop insert success shop_id is '.$data['shop_id']);
+            $this->info('shop insert success shop_id is ' . $data['shop_id']);
         }
     }
 
+    /**
+     * @param array $array
+     */
     protected function createEntity(array $array)
     {
         if (isset($array['firmInfo']['name']) && !empty($array['firmInfo'])) {
@@ -237,13 +287,16 @@ class InitDataCommand extends Command
                 $create['created_at'] = now();
                 $create['updated_at'] = now();
                 DB::connection()->table('entities')->insert($create);
-                $this->info('entities insert is success name is '.$create['name']);
+                $this->info('entities insert is success name is ' . $create['name']);
             }
         }
     }
 
 
-    protected function createItemsTable($table_name)
+    /**
+     * @param string table_name
+     */
+    protected function createItemsTable(string $table_name)
     {
         if (!Schema::hasTable($table_name)) {
             Schema::create($table_name, function (Blueprint $table) {
@@ -266,11 +319,20 @@ class InitDataCommand extends Command
                 $table->string('seller_id', 255)->nullable();
                 $table->string('classify', 255)->nullable()->comment('公司分类');
                 $table->string('item_url', 255)->nullable()->comment('商品链接');
+
+                $table->index('task_id', 'task_id');
+                $table->index(['nid', 'platform_id', 'seller_id']);
+                $table->index('classify', 'classify');
+                $table->index('item_url', 'item_url');
+
                 $table->timestamps();
             });
         }
     }
 
+    /**
+     * @return array
+     */
     protected function createParam(): array
     {
         $terms = $this->getPCD();
@@ -287,6 +349,10 @@ class InitDataCommand extends Command
         ];
     }
 
+    /**
+     * @param array $array
+     * @return array
+     */
     protected function getPCD(array $array = []): array
     {
         $array[] = [
@@ -315,6 +381,9 @@ class InitDataCommand extends Command
     }
 
 
+    /**
+     * 清理ES上的scroll_id 释放内存空间
+     */
     protected function clear()
     {
         $this->client->clearScroll([

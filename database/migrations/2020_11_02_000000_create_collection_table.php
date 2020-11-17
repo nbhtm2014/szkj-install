@@ -48,8 +48,8 @@ class CreateCollectionTable extends Migration
             $table->bigIncrements('id');
             $table->string('title',255)->comment('采集标题');
             $table->string('platform_id',100)->comment('采集平台id');
-            $table->text('keywords')->comment('采集关键词');
-            $table->tinyInteger('status')->default(0)->comment('任务状态');
+            $table->text('keywords')->nullable()->comment('采集关键词');
+            $table->tinyInteger('status')->default(0)->comment('任务状态:1 任务初始化,2 采集中 3 违规判断中 4 采集完成 5推送完成');
             $table->integer('user_id')->comment('用户id');
             $table->tinyInteger('pull_status')->default(0)->comment('推送状态');
             $table->string('pcd',100)->comment('省市区');
@@ -127,6 +127,7 @@ class CreateCollectionTable extends Migration
             $table->string('classify', 255)->nullable()->comment('公司分类');
             $table->string('item_url', 255)->nullable()->comment('商品链接');
 
+            $table->index('task_id','task_id');
             $table->index(['nid','platform_id','seller_id']);
             $table->index('classify','classify');
             $table->index('item_url','item_url');
