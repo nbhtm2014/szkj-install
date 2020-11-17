@@ -167,6 +167,9 @@ class CreateCollectionTable extends Migration
             $table->string('wechat_nick', 255)->nullable();
             $table->string('effect', 255)->nullable();
             $table->string('company', 255)->nullable()->comment('公司名称');
+
+            $table->index(['task_id','company']);
+            $table->index('wechat_id','wechat_id');
             $table->timestamps();
         });
     }
