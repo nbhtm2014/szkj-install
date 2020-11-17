@@ -17,7 +17,8 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "ext-json": "*",
         "szkj/rbac": "9999999-dev",
-        "szkj/collection": "9999999-dev"
+        "szkj/collection": "9999999-dev",
+        "szkj/stat": "9999999-dev"
     },
     "autoload": {
         "psr-4": {
