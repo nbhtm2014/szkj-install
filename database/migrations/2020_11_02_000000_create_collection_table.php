@@ -57,6 +57,7 @@ class CreateCollectionTable extends Migration
             $table->string('system_id',255)->nullable()->comment('系统id');
             $table->string('es_id',255)->nullable()->comment('es_id');
 
+            $table->index(['status','pull_status','type','system_id','ed_id']);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -96,6 +97,8 @@ class CreateCollectionTable extends Migration
             $table->string('lng',100)->nullable();
             $table->string('state',50)->nullable()->comment('经营状态/登记状态');
 
+            $table->index(['name','credit_no','city','district']);
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -123,6 +126,10 @@ class CreateCollectionTable extends Migration
             $table->string('seller_id', 255)->nullable();
             $table->string('classify', 255)->nullable()->comment('公司分类');
             $table->string('item_url', 255)->nullable()->comment('商品链接');
+
+            $table->index(['nid','platform_id','seller_id']);
+            $table->index('classify','classify');
+            $table->index('item_url','item_url');
             $table->timestamps();
         });
 
@@ -143,6 +150,9 @@ class CreateCollectionTable extends Migration
             $table->string('member_id', 255)->nullable();
             $table->string('seller_id', 255)->nullable();
             $table->string('item_user_id', 255)->nullable();
+
+            $table->index(['platform_id','shop_id','seller_id','member_id']);
+            $table->index(['company','credit_code']);
             $table->timestamps();
         });
 
