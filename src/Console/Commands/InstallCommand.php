@@ -92,6 +92,7 @@ ETO;
         $this->warn('start init areas data.....');
         $this->call('szkj:init_areas');
         $this->info('areas data is done.');
+
         if ($this->confirm('Do you need to release the RBAC file?')) {
             $this->call('szkj:rbac-install');
         }
