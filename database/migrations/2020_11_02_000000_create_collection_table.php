@@ -57,7 +57,7 @@ class CreateCollectionTable extends Migration
             $table->string('system_id',255)->nullable()->comment('系统id');
             $table->string('es_id',255)->nullable()->comment('es_id');
 
-            $table->index(['status','pull_status','type','system_id','ed_id']);
+            $table->index(['status','pull_status','type','system_id','es_id']);
             $table->timestamps();
             $table->softDeletes();
         });

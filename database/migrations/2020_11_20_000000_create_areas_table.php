@@ -48,7 +48,9 @@ class CreateAreasTable extends Migration
             $table->bigIncrements('id');
             $table->string('name',255)->comment('名称');
             $table->string('tag',50)->comment('标签');
-            $table->index(['name','tag']);
+            $table->integer('pid')->default(0)->comment('父级id');
+
+            $table->index(['name','tag','pid']);
             $table->timestamps();
         });
 
