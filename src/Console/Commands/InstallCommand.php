@@ -86,6 +86,11 @@ ETO;
          */
         $this->createBaseTransformers();
 
+        /**
+         * init areas
+         */
+        $this->call('szkj:init_areas');
+
         if ($this->confirm('Do you need to release the RBAC file?')) {
             $this->call('szkj:rbac-install');
         }
