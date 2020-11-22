@@ -64,7 +64,8 @@ class InitAreasCommand extends Command
             if ($name){
                 $create['pid'] = DB::table('areas')->where('name',$name)->first()->id;
             }
-            DB::table('areas')->insert($create);
+            DB::connection($this->getConnection())->table('areas')->insertOrIgnore($create);
+
             if (!empty($v->children)){
                 $this->createArea($v->children,$v->label);
             }

@@ -51,6 +51,7 @@ class CreateAreasTable extends Migration
             $table->integer('pid')->default(0)->comment('父级id');
 
             $table->index(['name','tag','pid']);
+            $table->unique(['name','tag','pid']);
             $table->timestamps();
         });
 
