@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.*",
+        "php": "^7.3",
         "laravel/framework": "~8.0",
         "dingo/api": "^3.0",
         "elasticsearch/elasticsearch": "^7.9",
