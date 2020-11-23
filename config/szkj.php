@@ -69,11 +69,16 @@ return [
 
         'prefix' => env('API_PREFIX', 'api'),
 
-        'namespace' => 'Szkj\\Rbac\\Controllers',
-
         'middleware' => ['auth:api', 'szkj.rbac'],
 
         'route_level' => 2,
+
+        'namespace' => [
+
+            'rbac'=>'Szkj\\Rbac\\Controllers',
+
+            'collection' => 'Szkj\\Collection\\Controllers'
+        ]
     ],
     /*
     |--------------------------------------------------------------------------
