@@ -13,7 +13,7 @@ class CreateRbacTable extends Migration
     /**
      * @return string
      */
-    public function getConnection() :string
+    public function getConnection(): string
     {
         return config('database.default');
     }
@@ -21,16 +21,17 @@ class CreateRbacTable extends Migration
     /**
      * @return string
      */
-    public function getPrefix() : string
+    public function getPrefix(): string
     {
-        return config('database.connections.'.$this->getConnection().'.prefix');
+        return config('database.connections.' . $this->getConnection() . '.prefix');
     }
 
     /**
      * @param string $name
      * @return string
      */
-    public function tableName(string $name):string{
+    public function tableName(string $name): string
+    {
         return $name;
     }
 
@@ -46,9 +47,9 @@ class CreateRbacTable extends Migration
             $table->bigIncrements('id');
             $table->string('name', 255)->nullable();
             $table->string('path', 255)->nullable();
-            $table->string('icon',100)->nullable();
+            $table->string('icon', 100)->nullable();
             $table->integer('pid')->default(0);
-            $table->index(['pid'],'pid');
+            $table->index(['pid'], 'pid');
             $table->timestamps();
         });
 
@@ -65,7 +66,7 @@ class CreateRbacTable extends Migration
             $table->bigIncrements('id');
             $table->integer('role_id');
             $table->integer('menu_id');
-            $table->index(['role_id','menu_id'],'role_id');
+            $table->index(['role_id', 'menu_id'], 'role_id');
 
             $table->timestamps();
         });
@@ -75,7 +76,7 @@ class CreateRbacTable extends Migration
             $table->bigIncrements('id');
             $table->integer('role_id');
             $table->integer('route_id');
-            $table->index(['role_id','route_id'],'role_id');
+            $table->index(['role_id', 'route_id'], 'role_id');
 
             $table->timestamps();
         });
@@ -83,13 +84,13 @@ class CreateRbacTable extends Migration
         //create routes table
         Schema::create($this->tableName('routes'), function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('path',255);
-            $table->string('methods',50);
-            $table->string('name',255)->nullable();
+            $table->string('path', 255);
+            $table->string('methods', 50);
+            $table->string('name', 255)->nullable();
             $table->tinyInteger('default')->default(0);
             $table->integer('pid')->default(0);
-            $table->index(['pid'],'pid');
-            $table->index(['path','name'],'path');
+            $table->index(['pid'], 'pid');
+            $table->index(['path', 'name'], 'path');
 
             $table->timestamps();
         });
@@ -98,15 +99,20 @@ class CreateRbacTable extends Migration
         //create routes_catalogs table
         Schema::create($this->tableName('routes_catalogs'), function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',255);
+            $table->string('name', 255);
 
             $table->timestamps();
         });
 
 
-        Schema::table('users',function (Blueprint $table){
-            $table->string('phone',100)->nullable();
-            $table->string('ip',255)->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('phone', 100)->nullable();
+            $table->string('ip', 255)->nullable();
+            // 'province' 'city' 'district'
+            $table->string('province', 100)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('district', 100)->nullable();
+
             $table->integer('role_id')->default(0);
             $table->tinyInteger('superadmin')->default(0);
         });
