@@ -62,7 +62,9 @@ class InitDataCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->client = ClientBuilder::create()->setHosts(config('szkj.elasticsearch-hosts'))->build();
+        if (!empty(config('szkj.elasticsearch-hosts'))) {
+            $this->client = ClientBuilder::create()->setHosts(config('szkj.elasticsearch-hosts'))->build();
+        }
     }
 
 
