@@ -44,7 +44,7 @@ class InitDataCommand extends Command
     /**
      * @var string
      */
-    protected $scroll = '2m';
+    protected $scroll = '1m';
 
     /**
      * @var string

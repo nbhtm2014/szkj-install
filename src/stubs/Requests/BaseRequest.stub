@@ -7,7 +7,7 @@
 namespace DummyNamespace;
 
 use Illuminate\Contracts\Validation\Validator;
-use Dingo\Api\Http\FormRequest;;
+use Dingo\Api\Http\FormRequest;
 use Szkj\Install\Exceptions\BaseBadRequestExceptions;
 
 class BaseRequest extends FormRequest
