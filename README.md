@@ -1,18 +1,38 @@
-<h1 align="center"> install </h1>
 
-<p align="center"> .</p>
 
 
 ## Installing
 
 ```shell
-$ composer require szkj/install -vvv
+$ composer require szkj/install 
 ```
 
 ## Usage
-
-TODO
-
+安装初始化
+```shell
+$ php artisan szkj:install
+```
+请配置 config.szkj
+```shell
+'pcd'=> [
+         //省
+        'province' => '',
+        //市
+        'city' => '',
+        //区
+        'district' => '',
+    ]
+````
+请配置 config.api
+```shell
+  'errorFormat' => [
+        'message' => ':message',
+        'errors' => ':errors',
+//        'code' => ':code',
+        'code' => ':status_code',
+        'debug' => ':debug',
+    ],
+```
 ## Contributing
 
 You can contribute in one of three ways:

@@ -69,7 +69,7 @@ return [
 
         'prefix' => env('API_PREFIX', 'api'),
 
-        'middleware' => ['auth:api', 'szkj.rbac'],
+        'middleware' => ['jwt.api', 'szkj.rbac'],
 
         'route_level' => 2,
 
