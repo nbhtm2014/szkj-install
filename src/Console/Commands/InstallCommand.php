@@ -87,6 +87,11 @@ ETO;
         $this->createBaseTransformers();
 
         /**
+         * jwt token
+         */
+        $this->call('jwt:secret');
+
+        /**
          * init areas
          */
         $this->warn('start init areas data.....');
@@ -112,6 +117,9 @@ ETO;
         );
         $this->call('vendor:publish',
             ["--provider" => "Szkj\Install\Providers\SzkjServiceProvider"]
+        );
+        $this->call('vendor:publish',
+            ["--provider" => "Tymon\JWTAuth\Providers\LaravelServiceProvider"]
         );
     }
 

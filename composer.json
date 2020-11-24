@@ -18,7 +18,8 @@
         "ext-json": "*",
         "szkj/rbac": "9999999-dev",
         "szkj/collection": "9999999-dev",
-        "szkj/stat": "9999999-dev"
+        "szkj/stat": "9999999-dev",
+        "tymon/jwt-auth": "^1.0"
     },
     "autoload": {
         "psr-4": {
