@@ -70,12 +70,37 @@ class InitDataCommand extends Command
 
     public function handle()
     {
+        $this->initAreas();
+
         $params = $this->createParam();
 
         $rep = $this->client->search($params);
 
         $this->initData($rep);
 
+    }
+
+    protected function initAreas(){
+
+        $areas = config('szkj.pcd');
+        foreach ($areas as $k => $v){
+            if(empty($v)){
+                unset($areas);
+            }
+        }
+        try {
+            $key = array_key_last($areas);
+            $pid = DB::connection($this->getConnection())
+                ->table('ares')
+                ->where('tag', $key)
+                ->where('name', $areas[$key])
+                ->first()
+                ->id;
+            DB::connection($this->getConnection())
+                ->table('ares')->where('pid', '!=', $pid)->delete();
+        }catch (\Exception $exception){
+            $this->warn($exception->getMessage());
+        }
     }
 
     protected function initData(array $rep)
@@ -111,14 +136,14 @@ class InitDataCommand extends Command
 
     protected function insertTask()
     {
-        if (!DB::connection($this->getConnection())->table('task')->where('id',$this->task_id)->count()) {
+        if (!DB::connection($this->getConnection())->table('tasks')->where('id',$this->task_id)->count()) {
             $platforms = DB::connection($this->getConnection())->table('platforms')->pluck('id')->toArray();
-            DB::connection($this->getConnection())->table('task')->insert([
+            DB::connection($this->getConnection())->table('tasks')->insert([
                 'id'          => $this->task_id,
                 'title'       => '全网检测任务首次排查',
                 'platform_id' => implode(',', $platforms),
                 'status'      => 1,
-                'user_id'     => DB::connection($this->getConnection())->table('user')->where('superadmin', 1)->first()->id,
+                'user_id'     => DB::connection($this->getConnection())->table('users')->where('superadmin', 1)->first()->id,
                 'pcd'         => trim(config('pcd.province') . ',' . config('pcd.city') . ',' . config('pcd.district'), ','),
                 'type'        => 1,
                 'created_at'  => now(),
@@ -133,7 +158,7 @@ class InitDataCommand extends Command
      */
     protected function updateTask(string $key,$value){
         DB::connection($this->getConnection())
-            ->table('task')
+            ->table('tasks')
             ->where('id',$this->task_id)
             ->update(
             [$key=>$value]
@@ -372,7 +397,7 @@ class InitDataCommand extends Command
             if (!empty($v)) {
                 $array[] = [
                     'term' => [
-                        "firmInfo.registrationAuthority.{$k}.keyword" => [
+                        "firmInfo.registrationAuthority.{$k}" => [
                             'value' => $v,
                         ],
                     ],
