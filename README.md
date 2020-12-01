@@ -33,6 +33,14 @@ $ php artisan szkj:install
         'debug' => ':debug',
     ],
 ```
+请配置 api.php
+```shell
+     'api' => [
+                'driver' => 'jwt',
+                'provider' => 'users',
+                'hash' => false,
+            ],
+```
 ## Contributing
 
 You can contribute in one of three ways:

@@ -85,19 +85,19 @@ class InitDataCommand extends Command
         $areas = config('szkj.pcd');
         foreach ($areas as $k => $v){
             if(empty($v)){
-                unset($areas);
+                unset($areas[$k]);
             }
         }
         try {
             $key = array_key_last($areas);
             $pid = DB::connection($this->getConnection())
-                ->table('ares')
+                ->table('areas')
                 ->where('tag', $key)
                 ->where('name', $areas[$key])
                 ->first()
                 ->id;
             DB::connection($this->getConnection())
-                ->table('ares')->where('pid', '!=', $pid)->delete();
+                ->table('areas')->where('pid', '!=', $pid)->delete();
         }catch (\Exception $exception){
             $this->warn($exception->getMessage());
         }
