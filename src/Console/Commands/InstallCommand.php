@@ -105,6 +105,10 @@ ETO;
         if ($this->confirm('Do you need to release the Collection file?')) {
             $this->call('szkj:collection-install');
         }
+
+        if ($this->confirm('Do you need to release the Stat file?')) {
+            $this->call('szkj:stat-install');
+        }
     }
 
     /**
