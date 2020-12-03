@@ -125,7 +125,7 @@ class InitDataCommand extends Command
                     $this->scroll_id = $data['_scroll_id'];
                 }
                 //更新任务状态
-                $this->updateTask('status',4);
+                $this->updateTask('status',5);
                 $this->clear();
             }
         } catch (\Exception $exception) {
