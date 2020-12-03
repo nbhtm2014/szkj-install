@@ -93,8 +93,8 @@ return [
         'drives' => [
 
             'db'=> [
-                //默认 状态 5  类型 月底任务 2
-              'where' => ['status'=>5,'type'=>2]
+                //默认 状态 5  类型 月底任务 1
+              'where' => ['status'=>5,'type'=>1]
             ],
 
             'appoint' => [
