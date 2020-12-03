@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             DB::connection($this->getConnection())->table('users')->insert([
                 'name'       => 'superadmin',
                 'email'      => 'szkj@szkj.com',
-                'password'   => Hash::make('password'),
+                'password'   => Hash::make('north4'),
                 'superadmin' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
