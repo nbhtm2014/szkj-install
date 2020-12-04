@@ -13,6 +13,14 @@ class BaseController extends Controller
 {
     use Helpers;
 
+    public $per;
+
+    public function __construct()
+    {
+        $this->per = request()->get('per',15);
+    }
+
+
     /**
      * @param null $data
      * @param string $message
