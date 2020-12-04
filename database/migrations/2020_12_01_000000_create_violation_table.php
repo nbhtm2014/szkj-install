@@ -68,6 +68,8 @@ class CreateViolationTable extends Migration{
             Schema::create($this->tableName('violation_type'),function (Blueprint $table){
                $table->id();
                $table->string('name',100)->comment('违规类型');
+
+               $table->unique('name');
             });
         }
     }
