@@ -53,12 +53,14 @@ class CreateViolationTable extends Migration{
                 $table->string('name',255)->comment('违规名称');
                 $table->string('word',255)->nullable()->comment('违规关键词');
                 $table->string('violation_type',255)->nullable()->comment('违规类型');
+                $table->integer('violation_type_id',255)->nullable()->comment('违规类型id');
+
                 $table->tinyInteger('status')->default(0)->comment('是否是违规 0-等待 1-是 2-不是');
                 $table->tinyInteger('pull')->default(0)->comment('0未推送1已推送');
                 $table->tinyInteger('machine')->default(0)->comment('0机器判断 1人工判断');
 
 
-                $table->index(['status','pull','machine']);
+                $table->index(['status','pull','machine','violation_type_id']);
                 $table->index(['platform_id','platform_tag','data_id','task_id']);
                 $table->timestamps();
             });
