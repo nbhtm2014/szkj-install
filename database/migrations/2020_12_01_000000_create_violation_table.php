@@ -60,9 +60,6 @@ class CreateViolationTable extends Migration{
                 $table->timestamps();
             });
         }
-
-
-
     }
 
     /**
