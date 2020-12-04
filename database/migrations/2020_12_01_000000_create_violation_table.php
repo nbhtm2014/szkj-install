@@ -55,6 +55,7 @@ class CreateViolationTable extends Migration{
                 $table->string('violation_type',255)->nullable()->comment('违规类型');
                 $table->tinyInteger('status')->default(0)->comment('是否是违规 0-等待 1-是 2-不是');
                 $table->tinyInteger('pull')->default(0)->comment('0未推送1已推送');
+                $table->tinyInteger('machine')->default(0)->comment('机器判断 1是 0否');
 
                 $table->timestamps();
             });
